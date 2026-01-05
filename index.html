@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>رحاب.. قلبي معك دائماً</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Tahoma", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: radial-gradient(circle at top, #ff9aaf, #2b002f);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at top, rgba(255, 255, 255, 0.08), transparent 60%);
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative;
+            width: 95%;
+            max-width: 900px;
+            padding: 30px 20px;
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.2fr);
+            gap: 20px;
+            align-items: stretch;
+            z-index: 2;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                padding: 20px 10px;
+            }
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow:
+                0 18px 45px rgba(0, 0, 0, 0.45),
+                0 0 60px rgba(255, 120, 170, 0.35);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 24px 22px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pill {
+            position: absolute;
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            filter: blur(30px);
+            opacity: 0.7;
+            z-index: -1;
+        }
+
+        .pill.p1 {
+            top: -40px;
+            left: -10px;
+            background: #ff6f91;
+        }
+
+        .pill.p2 {
+            bottom: -50px;
+            right: -40px;
+            background: #ffb5d0;
+        }
+
+        /* العنوان والقسم الأيسر (العد التنازلي) */
+        .title-block {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            height: 100%;
+        }
+
+        .small-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #ffd7e5;
+        }
+
+        .small-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #ffbed1;
+            box-shadow: 0 0 10px #ffbed1;
+        }
+
+        .main-title {
+            font-size: 28px;
+            line-height: 1.4;
+        }
+
+        .main-title span {
+            color: #ffd2e3;
+            font-weight: bold;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #ffe6f0;
+            opacity: 0.9;
+        }
+
+        .countdown-wrapper {
+            margin-top: 10px;
+        }
+
+        .countdown-label {
+            font-size: 13px;
+            color: #ffd8ea;
+            margin-bottom: 8px;
+        }
+
+        .countdown {
+            display: flex;
+            gap: 10px;
+        }
+
+        .time-box {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.09);
+            border-radius: 16px;
+            padding: 10px 8px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .time-number {
+            font-size: 22px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .time-label {
+            font-size: 11px;
+            margin-top: 3px;
+            color: #ffd8ea;
+        }
+
+        .note {
+            margin-top: 12px;
+            font-size: 12px;
+            color: #ffe1f0;
+            opacity: 0.9;
+        }
+
+        .note span {
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        /* زر إظهار الرسالة */
+        .button-area {
+            margin-top: auto;
+            padding-top: 12px;
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .love-btn {
+            border: none;
+            outline: none;
+            cursor: pointer;
+            background: linear-gradient(135deg, #ff6f91, #ff3e6b);
+            color: white;
+            padding: 10px 22px;
+            border-radius: 999px;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 10px 25px rgba(255, 80, 140, 0.6);
+            transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+        }
+
+        .love-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 30px rgba(255, 80, 140, 0.8);
+            background: linear-gradient(135deg, #ff8fb0, #ff275c);
+        }
+
+        .love-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 8px 18px rgba(255, 80, 140, 0.6);
+        }
+
+        .love-icon {
+            font-size: 16px;
+            filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.7));
+        }
+
+        /* قسم الرسالة (الجزء الأيمن) */
+        .message-block {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .message-header {
+            font-size: 15px;
+            color: #ffd7ea;
+            letter-spacing: 1px;
+        }
+
+        .to-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .message-text {
+            margin-top: 6px;
+            font-size: 14px;
+            line-height: 1.9;
+            color: #ffe8f3;
+            max-height: 260px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .message-text::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .message-text::-webkit-scrollbar-thumb {
+            background: rgba(255, 180, 210, 0.7);
+            border-radius: 10px;
+        }
+
+        .signature {
+            margin-top: 10px;
+            font-size: 13px;
+            color: #ffdcec;
+            text-align: left;
+        }
+
+        .signature span {
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        .hidden-message {
+            opacity: 0;
+            transform: translateY(10px);
+            filter: blur(4px);
+            transition: opacity 0.5s ease, transform 0.5s ease, filter 0.5s ease;
+        }
+
+        .hidden-message.visible {
+            opacity: 1;
+            transform: translateY(0);
+            filter: blur(0);
+        }
+
+        /* القلوب الطائرة في الخلفية */
+        .heart {
+            position: fixed;
+            width: 14px;
+            height: 14px;
+            background: radial-gradient(circle at 30% 30%, #ffffff, #ff5f8a 60%, #b3003b 100%);
+            transform: rotate(-45deg);
+            animation: floatUp 12s linear infinite;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .heart::before,
+        .heart::after {
+            content: "";
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            background: radial-gradient(circle at 30% 30%, #ffffff, #ff5f8a 60%, #b3003b 100%);
+            border-radius: 50%;
+        }
+
+        .heart::before {
+            top: -7px;
+            left: 0;
+        }
+
+        .heart::after {
+            left: 7px;
+            top: 0;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) rotate(-45deg);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.9;
+            }
+
+            90% {
+                opacity: 0.6;
+            }
+
+            100% {
+                transform: translateY(-120vh) rotate(-45deg);
+                opacity: 0;
+            }
+        }
+
+        .glow-orb {
+            position: fixed;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 140, 190, 0.9), transparent 70%);
+            filter: blur(4px);
+            opacity: 0.35;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glow-orb.o1 {
+            top: 10%;
+            right: -40px;
+        }
+
+        .glow-orb.o2 {
+            bottom: -60px;
+            left: -40px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="overlay"></div>
+    <div class="glow-orb o1"></div>
+    <div class="glow-orb o2"></div>
+
+    <div class="container">
+        <!-- القسم الأيسر: العنوان والعد التنازلي -->
+        <div class="glass-card">
+            <div class="pill p1"></div>
+            <div class="pill p2"></div>
+
+            <div class="title-block">
+                <div>
+                    <div class="small-label">
+                        <span class="small-dot"></span>
+                        <span>لحظة خاصة</span>
+                    </div>
+                    <h1 class="main-title">
+                        يا <span>رحاب</span>، كل ثانية تمر<br />
+                        تقربني أكثر منك.
+                    </h1>
+                    <p class="subtitle">
+                        هذا المكان الصغير صنعته عشان أقول لك إنك مو مجرد اسم في حياتي، أنتِ قصتي الأجمل، وهدية ربي اللي
+                        أتمناها تكمل معي كل العمر.
+                    </p>
+                </div>
+
+                <div class="countdown-wrapper">
+                    <div class="countdown-label">
+                        العد التنازلي حتى الساعة 12 ليلًا بتوقيت <span>الجزائر</span>:
+                    </div>
+                    <div class="countdown">
+                        <div class="time-box">
+                            <div id="days" class="time-number">0</div>
+                            <div class="time-label">أيام</div>
+                        </div>
+                        <div class="time-box">
+                            <div id="hours" class="time-number">0</div>
+                            <div class="time-label">ساعات</div>
+                        </div>
+                        <div class="time-box">
+                            <div id="minutes" class="time-number">0</div>
+                            <div class="time-label">دقائق</div>
+                        </div>
+                        <div class="time-box">
+                            <div id="seconds" class="time-number">0</div>
+                            <div class="time-label">ثواني</div>
+                        </div>
+                    </div>
+                    <p class="note">
+                        كل ما يقترب الوقت، <span>قلبي يهدأ أكثر</span> لأنه يعرف إنك موجودة فيه، وما رح أمل أبدًا من
+                        انتظار لحظات تجمعنا أكثر.
+                    </p>
+                </div>
+
+                <div class="button-area">
+                    <button class="love-btn" id="showMessageBtn">
+                        <span class="love-icon">❤</span>
+                        <span>اضغطي هنا يا رحاب</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- القسم الأيمن: رسالة الحب -->
+        <div class="glass-card">
+            <div class="pill p1"></div>
+            <div class="pill p2"></div>
+
+            <div class="message-block hidden-message" id="loveMessage">
+                <div>
+                    <div class="message-header">إلى الإنسانة الأقرب لروحي</div>
+                    <div class="to-name">رحاب الحبيبة،</div>
+                </div>
+
+                <div class="message-text">
+                    <p>
+                        ما أعرف من وين أبدأ، بس أعرف شيء واحد: من يوم عرفتك وحياتي صارت أهدى، أجمل، وأقرب للي أحلم فيه.
+                        وجودك مو مجرد صدفة حلوة، وجودك نعمة أنا ممتن لها في كل لحظة.
+                    </p>
+                    <br />
+                    <p>
+                        أحب طريقتك في الكلام، في الضحك، حتى في زعلك… أحب التفاصيل الصغيرة اللي يمكن ما تنتبهين لها أنت،
+                        بس أنا أحفظها كأنها كنز.
+                        أحب الطريقة اللي تخلي فيها حضورك المكان أدفى، واليوم أجمل مهما كان بسيط.
+                    </p>
+                    <br />
+                    <p>
+                        رحاب، يمكن ما أقدر ألمس يدك الآن، بس أقدر أوعدك بشيء أكبر: قلبي من اليوم وللأبد اختارك.
+                        ولو سألتيني: "ليش أحبك؟" بجاوبك بكل هدوء: لأن مافي سبب يخلي قلبي يبتسم غيرك.
+                    </p>
+                    <br />
+                    <p>
+                        أتمنى الأيام الجاية تكون مليانة رضا، وراحة، وضحكة ما تفارق ملامحك،
+                        وأتمنى أكون الشخص اللي دايمًا يخفف عليك، ويسمعك، ويوقف جنبك، حتى لو الدنيا كلها صارت ضدك.
+                    </p>
+                    <br />
+                    <p>
+                        يمكن هذا الموقع بسيط، بس هو طريقتي أقول لك: أنتِ الشيء اللي مستحيل يتكرر، واللي مستحيل أفرّط
+                        فيه.
+                        أحبك على طريقتك، على عفويتك، على كل شيء فيك… وأتمنى يومًا ما، لما تطالعين هالكلمات، تحسين
+                        بالطمأنينة اللي أحسها وأنا أكتبها لك.
+                    </p>
+                    <br />
+                    <p>
+                        لو مرّت عليك لحظة شكيتِ فيها في نفسك، أو في قيمتك… تذكري بس أنك عندي: كل القيمة، وكل المعنى، وكل
+                        الحكاية.
+                    </p>
+                </div>
+
+                <div class="signature">
+                    من قلب يحبك بصدق،<br />
+                    <span>الشخص اللي يتمنى يكون قدرك الحلو دائمًا.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // حساب العد التنازلي للساعة 12 ليلًا بتوقيت الجزائر (UTC+1 تقريبًا طوال السنة)
+        function getNextAlgeriaMidnight() {
+            const now = new Date();
+
+            // نضبط الهدف على منتصف الليل بتوقيت الجزائر (23:00 UTC لليوم الحالي)
+            let target = new Date();
+            target.setUTCHours(23, 0, 0, 0);
+
+            // إذا هذا الوقت مرّ، نروح لليوم التالي
+            if (target <= now) {
+                target.setUTCDate(target.getUTCDate() + 1);
+            }
+
+            return target;
+        }
+
+        const targetDate = getNextAlgeriaMidnight();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate.getTime() - now;
+
+            const daysEl = document.getElementById("days");
+            const hoursEl = document.getElementById("hours");
+            const minutesEl = document.getElementById("minutes");
+            const secondsEl = document.getElementById("seconds");
+
+            if (distance <= 0) {
+                daysEl.textContent = "0";
+                hoursEl.textContent = "0";
+                minutesEl.textContent = "0";
+                secondsEl.textContent = "0";
+                return;
+            }
+
+            const day = 1000 * 60 * 60 * 24;
+            const hour = 1000 * 60 * 60;
+            const minute = 1000 * 60;
+            const second = 1000;
+
+            const days = Math.floor(distance / day);
+            const hours = Math.floor((distance % day) / hour);
+            const minutes = Math.floor((distance % hour) / minute);
+            const seconds = Math.floor((distance % minute) / second);
+
+            daysEl.textContent = days;
+            hoursEl.textContent = hours;
+            minutesEl.textContent = minutes;
+            secondsEl.textContent = seconds;
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+
+        // إظهار الرسالة عند الضغط على الزر
+        const showMessageBtn = document.getElementById("showMessageBtn");
+        const loveMessage = document.getElementById("loveMessage");
+
+        showMessageBtn.addEventListener("click", () => {
+            loveMessage.classList.add("visible");
+            createBurstHearts();
+        });
+
+        // إنشاء قلوب تطلع وتطير في الخلفية باستمرار
+        function createHeart() {
+            const heart = document.createElement("div");
+            heart.classList.add("heart");
+
+            const size = Math.random() * 10 + 10; // 10 - 20px
+            heart.style.width = `${size}px`;
+            heart.style.height = `${size}px`;
+
+            const left = Math.random() * 100;
+            heart.style.left = `${left}vw`;
+
+            const duration = Math.random() * 6 + 8; // 8 - 14s
+            heart.style.animationDuration = `${duration}s`;
+
+            heart.style.opacity = 0;
+
+            document.body.appendChild(heart);
+
+            setTimeout(() => {
+                heart.style.opacity = 1;
+            }, 50);
+
+            setTimeout(() => {
+                heart.remove();
+            }, duration * 1000 + 1000);
+        }
+
+        // قلوب مستمرة
+        setInterval(createHeart, 1200);
+        for (let i = 0; i < 10; i++) {
+            setTimeout(createHeart, i * 400);
+        }
+
+        // انفجار قلوب خفيف عند الضغط على الزر
+        function createBurstHearts() {
+            for (let i = 0; i < 15; i++) {
+                setTimeout(createHeart, i * 120);
+            }
+        }
+    </script>
+</body>
+
+</html>
